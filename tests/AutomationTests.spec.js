@@ -1,7 +1,30 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
 import MagentoPageObjects from '../PageObjects/MagentoPageObjects';
+import Generic from '../PageObjects/Generic'
+test.describe('Layout tests', () => {
+  let magento;
 
+  test.beforeEach(async ({ page }) => {
+    magento = new MagentoPageObjects(page);
+    await page.goto('https://magento.softwaretestingboard.com/');
+  });
+
+  test('Home Page has proper title', async ({ page }) => {
+    await expect(page).toHaveTitle('Home Page');
+  });
+
+  //add test for menu header
+  test('Home Page menuo', async ({ page }) => {
+    await expect(page).toHaveTitle('Home Page');
+  });
+
+  // add test for product page layout
+
+  // add test for shopping cart small window
+
+
+})
 
 test.describe('Purchase item automation', () => {
   let magento;
@@ -11,104 +34,117 @@ test.describe('Purchase item automation', () => {
     await page.goto('https://magento.softwaretestingboard.com/');
   });
 
-  test('Page has proper title', async ({ page }) => {
-    await expect(page).toHaveTitle('Home Page');
-  });
-
   test('Order searched item on Magento page', async ({ page }) => {
+    const generic = new Generic(page)
+
+    test.setTimeout(180000)
+
     // Search for product
-    await magento.searchInput.fill('shirt');
+    await generic.enterText(magento.searchInput, 'shirt');
     await magento.searchInput.press('Enter');
 
     // Select first product
-    await magento.productLinks.first().click();
+    await generic.clickElement(magento.productLinks.first());
 
     // Select size and color
-    await expect(magento.sizeText).toHaveText('Size');
-    await magento.sizeOption('L').click();
-    await expect(magento.colorText).toHaveText('Color');
-    await magento.colorOption('Blue').click();
+    await generic.confirmText(magento.sizeText, 'Size');
+    await generic.clickElement(magento.sizeOption('L'));
+    await generic.confirmText(magento.colorText, 'Color');
+    await generic.clickElement(magento.colorOption('Blue'));
     
-    //check proper values selected
-    await expect(magento.selectedSize).toHaveText('L');
-    await expect(magento.selectedColor).toHaveText('Blue');
+    // Check proper values selected
+    await generic.confirmText(magento.selectedSize, 'L');
+    await generic.confirmText(magento.selectedColor, 'Blue');
 
     // Add to cart
-    await magento.addToCartButton.click();
+    await generic.clickElement(magento.addToCartButton);
 
     // Wait for success and open cart
-    await expect(magento.successMessage).toBeVisible();
-    await magento.cartIcon.click();
+    await generic.confirmElementIsVisible(magento.successMessage);
+    await generic.clickElement(magento.cartIcon);
     await page.waitForTimeout(2500);
 
     // Checkout
-    await magento.checkoutButton.waitFor();
-    await magento.checkoutButton.click();
+    await generic.confirmElementIsVisible(magento.checkoutButton);
+    await generic.clickElement(magento.checkoutButton);
 
     // Wait for checkout page/container to appear
     await page.waitForTimeout(2500);
-    await expect(page.locator('.checkout-container')).toBeVisible({ timeout: 5000 });
+    await generic.confirmElementIsVisible(magento.checkoutContainer);
 
     // Insert correct data for order
-    await page.waitForLoadState('networkidle');
-    await expect(magento.emailText).toBeVisible({ timeout: 5000 });
-    await magento.emailField.fill('bianca.apetrei09@gmail.com');
+    await generic.waitForPageToFullyLoad();
+    await generic.confirmElementIsVisible(magento.emailText);
+    await generic.enterText(magento.emailField, 'bianca.apetrei09@gmail.com');
 
-    await expect(magento.firstNameText).toBeVisible({ timeout: 5000 });
-    await magento.firstNameField.fill('Bianca');
+    await generic.confirmElementIsVisible(magento.firstNameText);
+    await generic.enterText(magento.firstNameField, 'Bianca');
 
-    await expect(magento.lastNameText).toBeVisible({ timeout: 5000 });
-    await magento.lastNameText.fill('Apetrei');
+    await generic.confirmElementIsVisible(magento.lastNameText);
+    await generic.enterText(magento.lastNameText, 'Apetrei');
 
-    await expect(magento.companyText).toBeVisible({ timeout: 5000 });
-    await magento.companyField.fill('No Company');
+    await generic.confirmElementIsVisible(magento.companyText);
+    await generic.enterText(magento.companyField, 'No Company');
 
-    await magento.streetText.scrollIntoViewIfNeeded();
-    await expect(magento.streetText).toBeVisible({ timeout: 5000 });
-    await magento.streetAddressField.fill('str. Marghitas 9');
+    await generic.confirmElementIsVisible(magento.streetText);
+    await generic.enterText(magento.streetAddressField, 'str. Marghitas 9');
 
-    await magento.cityText.scrollIntoViewIfNeeded();
-    await expect(magento.cityText).toBeVisible({ timeout: 5000 });
-    await magento.cityField.fill('Mosnita Veche');
+    await generic.confirmElementIsVisible(magento.cityText);
+    await generic.enterText(magento.cityField, 'Mosnita Veche');
 
-    await magento.countrySelect.scrollIntoViewIfNeeded();
-    await expect(magento.countryText).toBeVisible({ timeout: 5000 });
-    await magento.romaniaOption.selectOption({ label: 'Romania' }); 
+    await generic.confirmElementIsVisible(magento.countryText);
+    await generic.selectOption(magento.romaniaOption, 'Romania'); 
 
-    await magento.regionSelect.scrollIntoViewIfNeeded();
-    await expect(magento.stateProvinceText).toBeVisible({ timeout: 5000 });
-    await magento.regionSelect.selectOption({ label: 'Timiş' });
+    await generic.confirmElementIsVisible(magento.stateProvinceText);
+    await generic.selectOption(magento.regionSelect, 'Timiş');
 
-    await expect(magento.postcodeText).toBeVisible({ timeout: 5000 });
-    await magento.postcodeField.fill('307287');
+    await generic.confirmElementIsVisible(magento.postcodeText);
+    await generic.enterText(magento.postcodeField,'307287');
 
-    await expect(magento.telephoneText).toBeVisible({ timeout: 5000 });
-    await magento.telephoneField.fill('0728456123');
+    await generic.confirmElementIsVisible(magento.telephoneText);
+    await generic.enterText(magento.telephoneField,'0728456123');
 
-    await magento.shippingMethodsTitle.waitFor({ state: 'visible' });
-    await expect(magento.shippingMethodsTitle).toBeVisible();
+    await generic.confirmElementIsVisible(magento.shippingMethodsTitle);
 
-    // check shipping method elements
-    await expect(magento.flatRateRadio).toBeVisible();
-    await expect(magento.flatRatePrice).toBeVisible();
-    await expect(magento.flatRateMethodLabel).toBeVisible();
-    await expect(magento.flatRateCarrierLabel).toBeVisible();
+    // Check shipping method elements
+    await generic.confirmElementIsVisible(magento.flatRateRadio);
+    await generic.confirmElementIsVisible(magento.flatRatePrice);
+    await generic.confirmElementIsVisible(magento.flatRateMethodLabel);
+    await generic.confirmElementIsVisible(magento.flatRateCarrierLabel);
 
-    await expect(magento.buttonNext).toBeVisible();
-    await page.waitForTimeout(2000);
-    magento.buttonNext.click();
+    await generic.confirmElementIsVisible(magento.buttonNext);
+    await page.waitForTimeout(3000);
+    await generic.clickElement(magento.buttonNext);
 
-
-    //payment method page
-    await expect(magento.titlePaymentMethod).toBeVisible();
-    await expect(magento.billingOrderDetails).toContainText(`Bianca Apetrei
+    // Payment method page
+    await page.waitForTimeout(10000);
+    await generic.waitForPageToFullyLoad()
+    await generic.confirmElementIsVisible(magento.titlePaymentMethod);
+    await generic.confirmTextContains(magento.billingOrderDetails, `Bianca Apetrei
     str. Marghitas 9
     Mosnita Veche, Timiş 307287
     Romania
     0728456123`);
+ 
+    // Order summary
+    await generic.confirmElementIsVisible(magento.titleOrderSummary);
+    await generic.confirmText(magento.titleOrderSummary, 'Order Summary');
 
-    //order summary
-    await expect(magento.titleOrderSummary).toBeVisible();
-    await expect(magento.titleOrderSummary).toHaveText('Order Summary');
+    await generic.clickElement(magento.buttonPlaceOrder)
+
+    // Order placed successfully
+    await page.waitForTimeout(10000);
+    await generic.confirmText(magento.textThankYouForYourOrder, 'Thank you for your purchase!')
+    await generic.confirmTextContains(magento.textYourOrderNumber, 'Your order # is: ')
+    await generic.confirmText(magento.textEmailOrderConfirmation, 'We\'ll email you an order confirmation with details and tracking info.')
+    await generic.confirmText(magento.textYouCanTrackOrder, 'You can track your order status by creating an account.')
+    await generic.confirmTextContains(magento.emailLabel, 'Email Address')
+    await generic.confirmText(magento.emailValue, 'bianca.apetrei09@gmail.com')
+
+    await generic.confirmElementIsVisible(magento.buttoncreateAccount)
+    await generic.confirmTextContains(magento.buttoncreateAccount, 'Create an Account')
   });
+
+  // 'Order item from woman category on Magento page'
+  
 });

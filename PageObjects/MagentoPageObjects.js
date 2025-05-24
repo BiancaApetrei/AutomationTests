@@ -54,10 +54,17 @@ export default class MagentoPageObjects {
 
     // Payment method
     this.titlePaymentMethod = page.locator('div.step-title', {hasText: 'Payment Method'});
-
     this.billingOrderDetails = page.locator('div.billing-address-details')
-
     this.titleOrderSummary = page.locator('div.opc-block-summary span').getByText('Order Summary')
+
+    this.buttonPlaceOrder = page.locator('button.action.primary.checkout[title="Place Order"]');
+    this.textThankYouForYourOrder = page.locator("span.base[data-ui-id='page-title-wrapper']")
+    this.textYourOrderNumber = page.locator('div.checkout-success p', { hasText: 'Your order #' })
+    this.textEmailOrderConfirmation = page.locator('div.checkout-success p', {hasText: "We'll email you an order confirmation"});
+    this.textYouCanTrackOrder = page.locator("p", {hasText: "You can track your order status by creating an account."});
+    this.emailLabel = page.locator("p span", {hasText: "Email Address"});
+    this.emailValue = page.locator("p span[data-bind='text: getEmailAddress()']");
+    this.buttoncreateAccount = page.locator('a.action.primary[href*="delegateCreate"]');
 
   }
     
