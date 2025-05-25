@@ -35,6 +35,7 @@ export default class page_functions {
     }
 
     async confirmElementIsVisible(selector) {
+        await selector.scrollIntoViewIfNeeded();
         await selector.waitFor({ state: 'visible'});
         await expect(selector).toBeVisible();
     }
@@ -46,10 +47,11 @@ export default class page_functions {
     }
 
     async confirmValue(selector, expectedValue) {
-        await expect(this.page.locator(selector)).toHaveValue(expectedValue);
+        await expect(selector).toHaveValue(expectedValue);
     }
 
     async confirmText(selector, expectedText) {
+        await expect(selector).toBeVisible();
         await expect(selector).toHaveText(expectedText);
     }
 
@@ -65,4 +67,19 @@ export default class page_functions {
     async waitForPageToFullyLoad () {
         await this.page.waitForLoadState('networkidle');
     }
+
+    async hoverElement (selector) {
+        await selector.hover();
+    }
+
+    async getPriceAmount(priceWrapper) {
+        const amount = await priceWrapper.getAttribute('data-price-amount');
+    return amount;
+    }
+
+    async checkListContainsAllTexts(locator, texts) {
+        for (const text of texts) {
+        await expect(locator.locator('li', { hasText: text })).toBeVisible();
+    }
+}
 }

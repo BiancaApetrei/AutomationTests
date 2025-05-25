@@ -15,6 +15,12 @@ export default class MagentoPageObjects {
     this.cartIcon = page.locator('.showcart');
     this.checkoutButton = page.locator('#top-cart-btn-checkout');
     this.checkoutContainer = page.locator('.checkout-container');
+    this.emptyCartText = page.locator('strong.subtitle.empty', { hasText: 'You have no items in your shopping cart.' });
+    this.closeMiniCartButton = page.locator('button#btn-minicart-close[title="Close"]');
+
+    // No results from search page
+    this.noResultsText = page.locator('div.message.notice', { hasText: 'Your search returned no results.' })
+
 
     // Shipping Address Fields
     this.emailField = page.locator('#customer-email-fieldset input#customer-email');
@@ -46,8 +52,7 @@ export default class MagentoPageObjects {
     this.shippingMethodsTitle = page.locator('div.step-title', { hasText: 'Shipping Methods' });
 
     this.flatRateRadio = page.locator('input[type="radio"][value="flatrate_flatrate"]');
-    this.flatRatePrice = page.locator('tr.row:has(input[value="flatrate_flatrate"]) .col-price .price').getByText('$5.00');
-    this.flatRateMethodLabel = page.locator('#label_method_flatrate_flatrate');
+    this.flatRatePrice = (value) =>  page.locator('tr.row:has(input[value="flatrate_flatrate"]) .col-price .price[data-bind*="getFormattedPrice"]', {hasText: `$${value}`});    this.flatRateMethodLabel = page.locator('#label_method_flatrate_flatrate');
     this.flatRateCarrierLabel = page.locator('#label_carrier_flatrate_flatrate');
 
     this.buttonNext = page.locator('button[data-role="opc-continue"]').getByText('Next')
@@ -57,15 +62,67 @@ export default class MagentoPageObjects {
     this.billingOrderDetails = page.locator('div.billing-address-details')
     this.titleOrderSummary = page.locator('div.opc-block-summary span').getByText('Order Summary')
 
+    // Order summary
+    this.orderTotalPrice = (value) => page.locator(`tr.grand.totals .amount .price`, { hasText: `$${value}` });
+
+
     this.buttonPlaceOrder = page.locator('button.action.primary.checkout[title="Place Order"]');
-    this.textThankYouForYourOrder = page.locator("span.base[data-ui-id='page-title-wrapper']")
+    this.pageTitleWrapper = page.locator("span.base[data-ui-id='page-title-wrapper']")
     this.textYourOrderNumber = page.locator('div.checkout-success p', { hasText: 'Your order #' })
     this.textEmailOrderConfirmation = page.locator('div.checkout-success p', {hasText: "We'll email you an order confirmation"});
-    this.textYouCanTrackOrder = page.locator("p", {hasText: "You can track your order status by creating an account."});
+    // this.textYouCanTrackOrder = page.locator("p", {hasText: "You can track your order status by creating an account."});
+
+    this.textYouCanTrackOrder = page.locator("p:has-text('You can track your order status by creating an account.')");
     this.emailLabel = page.locator("p span", {hasText: "Email Address"});
     this.emailValue = page.locator("p span[data-bind='text: getEmailAddress()']");
     this.buttoncreateAccount = page.locator('a.action.primary[href*="delegateCreate"]');
 
-  }
+    // menu headers
+    this.menuWhatsNew = page.locator('a.level-top', { hasText: /^What's New$/ });
+    this.menuWomen = page.locator('a.level-top', { hasText: /^Women$/ });
+    this.menuMen = page.locator('a.level-top', { hasText: /^Men$/ });
+    this.menuGear = page.locator('a.level-top', { hasText: /^Gear$/ });
+    this.menuTraining = page.locator('a.level-top', { hasText: /^Training$/ });
+    this.menuSale = page.locator('a.level-top', { hasText: /^Sale$/ });
+      
+    // menu women
+    this.menuWomenTops = this.menuWomen.locator('li:has(> a:has-text("Tops"))');
+    this.menuWomenHoodies = this.menuWomenTops.locator('a:has-text("Hoodies & Sweatshirts")');
+
+    // Product link
+    this.cassiaSweatshirtLink = page.locator('a.product-item-link', { hasText: 'Cassia Funnel Sweatshirt' });
+    this.price = page.locator('#product-price-1146');
+    this.cartSubtotal = page.locator('div.amount.price-container span.price-wrapper span.price');
+
+    // update quantity from mini-cart window
+    this.productQuantityMiniCart = page.locator('div.details-qty.qty input.item-qty.cart-item-qty')
+    this.buttonUpdateQuantityMiniCart = page.locator('button.update-cart-item')
+
+    // check product page
+    this.fitnessEquipment = page.locator('div.categories-menu ul.items >> a', { hasText: /^Fitness Equipment$/ });
+    this.productLinkSpriteFoamRoller = page.locator('a.product-item-link:has-text("Sprite Foam Roller")');
+    this.AddFirstReviewLink = page.locator('a.action.add', { hasText: 'Be the first to review this product' })
+    this.productPrice = page.locator('.product-item-info span[data-price-type="finalPrice"] span.price', { hasText: '$19.00' })
+    this.stockAvailable = page.locator('div.stock.available[title="Availability"] >> span', { hasText: "In stock" });
+    this.qtyLabel = page.locator('label:has-text("Qty")');
+    this.qtyInput = page.locator('input.input-text.qty[type="number"][name="qty"][title="Qty"]');
+    this.addToWishList = page.locator('div.product-addto-links a[data-action="add-to-wishlist"]');
+    this.addToCompare = page.locator('div.product-addto-links a[data-role="add-to-links"].tocompare');
+
+    this.detailsTab = page.locator('div.data.item.title[data-role="collapsible"]#tab-label-description a.data.switch');
+    this.detailsContent = page.locator('div.data.item.content#description[data-role="content"]');
+    this.productDescription = page.locator('div.product.attribute.description > div.value > ul');
+
+    this.moreInfoLink = page.locator('a#tab-label-additional-title.data.switch[data-toggle="trigger"]');
     
+    this.activityLabel = page.locator('th.col.label', { hasText: 'Activity' });
+    this.materialLabel = page.locator('th.col.label', { hasText: 'Material' });
+    this.genderLabel = page.locator('th.col.label', { hasText: 'Gender' });
+    this.categoryLabel = page.locator('th.col.label', { hasText: 'Category' });
+
+    this.activityValue = page.locator('td[data-th="Activity"]');
+    this.materialValue = page.locator('td[data-th="Material"]');
+    this.genderValue = page.locator('td[data-th="Gender"]');
+    this.categoryValue = page.locator('td[data-th="Category"]');
+  }    
 }
