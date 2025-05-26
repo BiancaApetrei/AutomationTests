@@ -24,7 +24,6 @@ export default class page_functions {
     }
 
     async enterText(selector, value) {
-        // await selector.clearText();
         if (value !== null && value !== '') {
             await selector.fill(value.toString());
         }
@@ -41,8 +40,8 @@ export default class page_functions {
     }
 
     async confirmElementExists(selector) {
-        const element = await this.page.locator(selector)
-        const count = await element.count()
+        const element = await this.page.locator(selector);
+        const count = await element.count();
         expect(count, 'Element not found: ' + selector).toBeGreaterThan(0);
     }
 
@@ -56,7 +55,6 @@ export default class page_functions {
     }
 
     async confirmTextContains(selector, expectedText, timeout = 10000) {
-        // await selector.waitFor({ state: 'visible'});
         await expect(selector).toContainText(expectedText, timeout);
     }
 
