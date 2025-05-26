@@ -34,7 +34,7 @@ export default class page_functions {
     }
 
     async confirmElementIsVisible(selector) {
-        await selector.scrollIntoViewIfNeeded();
+        await selector.scrollIntoViewIfNeeded({ timeout: 60000 });
         await selector.waitFor({ state: 'visible'});
         await expect(selector).toBeVisible();
     }

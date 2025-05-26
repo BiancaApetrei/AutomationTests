@@ -446,6 +446,7 @@ test.describe('Short tests', () => {
   // Check invlid voucher
   test('Check invlid voucher - error', async ({ page }) => {
     const generic = new Generic(page);
+    const randomEmail = `user${Math.floor(Math.random() * 10000)}@example.com`;
 
     test.setTimeout(180000);
 
@@ -484,7 +485,7 @@ test.describe('Short tests', () => {
 
     // Insert correct data for order
     await generic.waitForPageToFullyLoad();
-    await generic.enterText(magento.emailField, 'bianca.apetrei09@gmail.com');
+    await generic.enterText(magento.emailField, randomEmail);
     await generic.enterText(magento.firstNameField, 'Bianca');
     await generic.enterText(magento.lastNameText, 'Apetrei');
     await generic.enterText(magento.companyField, 'No Company');
