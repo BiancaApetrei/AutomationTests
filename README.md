@@ -20,21 +20,22 @@ This project contains automated test scripts built with [Playwright](https://pla
 
 ## 📁 Project Structure
 AUTOMATIONTESTS/
-├── .github/ # GitHub workflows (if any)
-├── node_modules/ # Dependencies
+├── .github/                  # GitHub workflows (CI/CD)
+├── node_modules/             # Node.js dependencies
 ├── PageObjects/
-│ ├── Generic.js # Common reusable methods (e.g., visibility checks)
-│ └── MagentoPageObjects.js # Page-specific selectors/methods for Magento
+│   ├── Generic.js            # Common reusable methods (e.g., visibility checks)
+│   └── MagentoPageObjects.js # Magento-specific selectors/methods
 ├── playwright-report/
-│ └── index.html # HTML report generated after test run
-├── test-results/ # Artifacts from test runs (e.g., screenshots, traces)
+│   └── index.html            # HTML report generated after test run
+├── test-results/             # Artifacts from test runs (e.g., screenshots, traces)
 ├── tests/
-│ └── AutomationTests.spec.js # Main test suite
+│   └── AutomationTests.spec.js # Main test suite
 ├── .gitignore
-├── package.json
-├── package-lock.json
-├── playwright.config.js # Configuration (timeout, retries, baseURL, etc.)
-└── README.md # This file
+├── package.json              # Project metadata and dependencies
+├── package-lock.json         # Dependency lock file
+├── playwright.config.js      # Playwright configuration (timeouts, baseURL, etc.)
+└── README.md                 # Project overview (this file)
+
 
 ---
 
